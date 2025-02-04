@@ -16,6 +16,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+
     @Override
     public UserModel findUserByUsername(String username) {
         return userRepository.findByUsername(username);

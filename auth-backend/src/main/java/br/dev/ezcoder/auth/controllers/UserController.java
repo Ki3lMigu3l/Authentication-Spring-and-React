@@ -1,8 +1,9 @@
 package br.dev.ezcoder.auth.controllers;
 
 import br.dev.ezcoder.auth.domain.users.UserModel;
+import br.dev.ezcoder.auth.security.CustomUserDetailsService;
 import br.dev.ezcoder.auth.services.UserService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +14,17 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
-@RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
 
     @PostMapping
     public ResponseEntity<UserModel> createNewUser(@RequestBody UserModel userModel) {
+        userDetailsService.loadUserByUsername(userModel.getUsername());
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userModel));
     }
 
